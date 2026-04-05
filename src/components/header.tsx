@@ -6,7 +6,6 @@ import {
   LogOut,
   User as UserIcon,
   Loader2,
-  Settings,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
@@ -62,14 +61,6 @@ export function Header() {
             <Button variant="ghost" onClick={() => router.push("/leaderboard")}>
               Leaderboard
             </Button>
-            {process.env.NODE_ENV === "development" && (
-              <Button
-                variant="ghost"
-                onClick={() => router.push("/admin/setup")}
-              >
-                Admin Setup
-              </Button>
-            )}
             <ThemeToggle />
             {authLoading ? (
               <div className="w-8 h-8 flex items-center justify-center">
@@ -119,14 +110,6 @@ export function Header() {
                       <UserIcon className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
-                    {process.env.NODE_ENV === "development" && (
-                      <DropdownMenuItem asChild>
-                        <Link href="/admin/setup" className="flex items-center">
-                          <Settings className="mr-2 h-4 w-4" />
-                          <span>Database Setup</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut}>
                       <LogOut className="mr-2 h-4 w-4" />
