@@ -10,8 +10,8 @@
  *   - GeneratePersonalizedQuestionsOutput: The output type for the function.
  */
 
-import {ai} from '@/ai/genkit-manual';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit-manual';
+import { z } from 'genkit';
 
 // Define the input schema
 const GeneratePersonalizedQuestionsInputSchema = z.object({
@@ -41,8 +41,8 @@ export async function generatePersonalizedQuestions(input: GeneratePersonalizedQ
 // Define the prompt
 const generatePersonalizedQuestionsPrompt = ai.definePrompt({
   name: 'generatePersonalizedQuestionsPrompt',
-  input: {schema: GeneratePersonalizedQuestionsInputSchema},
-  output: {schema: GeneratePersonalizedQuestionsOutputSchema},
+  input: { schema: GeneratePersonalizedQuestionsInputSchema },
+  output: { schema: GeneratePersonalizedQuestionsOutputSchema },
   prompt: `You are an expert medical educator creating a personalized quiz.
 
 Generate a set of {{{numberOfQuestions}}} challenging study questions based on the following criteria:
@@ -70,8 +70,8 @@ const generatePersonalizedQuestionsFlow = ai.defineFlow(
     inputSchema: GeneratePersonalizedQuestionsInputSchema,
     outputSchema: GeneratePersonalizedQuestionsOutputSchema,
   },
-  async input => {
-    const {output} = await generatePersonalizedQuestionsPrompt(input);
+  async (input: z.infer<typeof GeneratePersonalizedQuestionsInputSchema>) => {
+    const { output } = await generatePersonalizedQuestionsPrompt(input);
     return output!;
   }
 );

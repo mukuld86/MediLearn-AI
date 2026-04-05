@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { QuizResult } from "./multiple-choice-quiz-view";
 import { cn } from "@/lib/utils";
-import { updateUserQuizStats } from "@/lib/firestore";
+import { updateUserQuizStats } from "@/lib/data-client";
 import { useToast } from "@/hooks/use-toast";
 
 interface MultipleChoiceQuizCompleteProps {

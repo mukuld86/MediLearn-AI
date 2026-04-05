@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { getLeaderboard, type UserProfile } from "@/lib/firestore";
+import { getLeaderboard } from "@/lib/data-client";
+import { UserProfile } from "@/lib/auth-types";
 import { Header } from "@/components/header";
 import {
   Table,
@@ -170,7 +171,7 @@ export default function LeaderboardPage() {
                   <p className="mb-2">This error might be caused by:</p>
                   <ul className="list-disc list-inside space-y-1 text-sm">
                     <li>Network connectivity issues</li>
-                    <li>Firebase permissions not properly configured</li>
+                    <li>Authentication/session issues</li>
                     <li>Temporary service unavailability</li>
                   </ul>
                   <p className="mt-2">

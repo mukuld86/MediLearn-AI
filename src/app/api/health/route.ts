@@ -1,21 +1,25 @@
 import { NextResponse } from 'next/server';
+import { getDb } from '@/lib/mongodb';
 
 export async function GET() {
   try {
+    const db = await getDb();
+    const pingResult = await db.command({ ping: 1 });
+
     return NextResponse.json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV,
-      firebase: {
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Set' : 'Not Set',
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'Not Set',
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'Not Set',
+      mongodb: {
+        uriConfigured: Boolean(process.env.MONGODB_URI),
+        dbName: process.env.MONGODB_DB_NAME || 'medilearn',
+        ping: pingResult?.ok === 1 ? 'ok' : 'failed',
       }
     });
   } catch (error) {
     return NextResponse.json(
-      { 
-        status: 'error', 
+      {
+        status: 'error',
         message: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString()
       },

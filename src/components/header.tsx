@@ -9,8 +9,6 @@ import {
   Settings,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,

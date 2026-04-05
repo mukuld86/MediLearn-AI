@@ -7,7 +7,7 @@ import { CheckCircle2, Star, Lightbulb, TrendingUp } from 'lucide-react';
 import { generateFeedbackAction } from '@/app/actions';
 import { Skeleton } from './ui/skeleton';
 import { useAuth } from '@/context/auth-context';
-import { updateUserQuizStats } from '@/lib/firestore';
+import { updateUserQuizStats } from '@/lib/data-client';
 
 interface QuizCompleteProps {
   topic: string;

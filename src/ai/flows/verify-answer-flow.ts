@@ -8,8 +8,8 @@
  *   - VerifyAnswerOutput: The output type for the function.
  */
 
-import {ai} from '@/ai/genkit-manual';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit-manual';
+import { z } from 'genkit';
 
 // Define the input schema
 const VerifyAnswerInputSchema = z.object({
@@ -33,8 +33,8 @@ export async function verifyAnswer(input: VerifyAnswerInput): Promise<VerifyAnsw
 // Define the prompt
 const verifyAnswerPrompt = ai.definePrompt({
   name: 'verifyAnswerPrompt',
-  input: {schema: VerifyAnswerInputSchema},
-  output: {schema: VerifyAnswerOutputSchema},
+  input: { schema: VerifyAnswerInputSchema },
+  output: { schema: VerifyAnswerOutputSchema },
   prompt: `You are a fair and knowledgeable medical professor grading a student's quiz answer.
 The student was required to answer in at least 25 words. This is a test of both knowledge and the ability to explain concepts clearly.
 
@@ -58,8 +58,8 @@ const verifyAnswerFlow = ai.defineFlow(
     inputSchema: VerifyAnswerInputSchema,
     outputSchema: VerifyAnswerOutputSchema,
   },
-  async input => {
-    const {output} = await verifyAnswerPrompt(input);
+  async (input: z.infer<typeof VerifyAnswerInputSchema>) => {
+    const { output } = await verifyAnswerPrompt(input);
     return output!;
   }
 );

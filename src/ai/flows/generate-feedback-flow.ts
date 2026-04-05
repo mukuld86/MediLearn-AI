@@ -9,8 +9,8 @@
  *   - GenerateFeedbackOutput: The output type for the function.
  */
 
-import {ai} from '@/ai/genkit-manual';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit-manual';
+import { z } from 'genkit';
 
 const QuizResultSchema = z.object({
   question: z.string().describe('The question that was asked.'),
@@ -39,8 +39,8 @@ export async function generateFeedback(input: GenerateFeedbackInput): Promise<Ge
 // Define the prompt
 const generateFeedbackPrompt = ai.definePrompt({
   name: 'generateFeedbackPrompt',
-  input: {schema: GenerateFeedbackInputSchema},
-  output: {schema: GenerateFeedbackOutputSchema},
+  input: { schema: GenerateFeedbackInputSchema },
+  output: { schema: GenerateFeedbackOutputSchema },
   prompt: `You are a supportive and insightful medical tutor with expertise in medical education. A student has just completed a quiz on the topic of "{{{topic}}}".
 
 Here are their results:
@@ -83,8 +83,8 @@ const generateFeedbackFlow = ai.defineFlow(
     inputSchema: GenerateFeedbackInputSchema,
     outputSchema: GenerateFeedbackOutputSchema,
   },
-  async input => {
-    const {output} = await generateFeedbackPrompt(input);
+  async (input: z.infer<typeof GenerateFeedbackInputSchema>) => {
+    const { output } = await generateFeedbackPrompt(input);
     return output!;
   }
 );
