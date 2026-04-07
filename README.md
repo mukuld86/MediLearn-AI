@@ -1,117 +1,100 @@
 # MediLearn AI
 
-MediLearn AI is an AI-powered study platform for medical students and professionals. It generates personalized quizzes, provides intelligent feedback, and tracks learning progress to enhance understanding and retention.
-
-Beyond core functionality, this project demonstrates a **complete DevOps-driven deployment and observability pipeline**, making it a full-stack + infrastructure showcase.
+MediLearn AI is an AI-driven study platform for medical learners. It creates personalized quizzes, delivers intelligent feedback, and tracks progress while demonstrating a full-stack deployment and monitoring pipeline.
 
 ---
 
-##  Core Features
+## Overview
 
-*  Personalized quiz generation by topic and context
-*  AI-powered grading and feedback
-*  User profiles and leaderboard
-*  Email/password authentication with secure HttpOnly session cookies
-*  MongoDB Atlas-backed persistence for users and quiz results
-*  Real-time application monitoring using Prometheus & Grafana
+MediLearn AI combines:
+
+* adaptive quiz generation
+* AI-assisted grading and learning feedback
+* secure user sessions and persistent progress tracking
+* a production-ready deployment workflow with observability
+
+It is designed as both a learning product and a technical showcase.
+
+---
+
+## Key Features
+
+* Personalized quiz creation by topic and context
+* AI-powered answer evaluation and feedback
+* User profiles, progress tracking, and leaderboard
+* Secure authentication with HttpOnly session cookies
+* Persistent storage using MongoDB Atlas
+* Prometheus metrics and Grafana dashboards for monitoring
+
+---
+
+## Architecture
+
+```text
+User → Next.js app → Node backend
+     ↓              ↓
+  Authentication   MongoDB
+                   Metrics → Prometheus → Grafana
+```
 
 ---
 
 ## Tech Stack
 
-### Application Layer
-
-* **Framework:** Next.js (App Router)
-* **Language:** TypeScript
-* **AI:** Google Gemini via Genkit
-* **UI:** React, Shadcn/UI, Tailwind CSS
-* **Backend:** Custom Node.js server (`server.js`)
-* **Database:** MongoDB Atlas
-
----
-
-### DevOps & Infrastructure
-
-This project includes a **complete DevOps workflow**:
-
-#### Containerization
-
-* Dockerized the application using a production-ready Dockerfile
-* Built optimized images for deployment
-
-#### Kubernetes (Minikube)
-
-* Deployed using **Deployment + Service (NodePort)**
-* Managed pods and container lifecycle
-* Enabled scalable and isolated environment
-
-#### Monitoring & Observability
-
-Implemented **application-level monitoring** (not just infrastructure):
-
-* Custom `/api/metrics` endpoint (Prometheus format)
-* Prometheus configured to scrape application metrics
-* Grafana dashboards built for real-time visualization
-
-###  Metrics Monitored
-
-* `app_requests_total` → Traffic
-* `app_latency_ms` → Performance
-* `app_errors_total` → Reliability
-* `app_success_total` → Success rate
-* `app_active_users` → User activity
-* `app_db_query_time_ms` → Database performance
-* `app_uptime_seconds` → Stability
+* Next.js (App Router)
+* TypeScript
+* React + Tailwind CSS
+* Shadcn/UI components
+* Node.js backend server
+* MongoDB Atlas
+* Google Gemini via Genkit
+* Docker and Kubernetes for deployment
+* Prometheus + Grafana for observability
 
 ---
 
-##  Architecture
+## Local Setup
 
-```text
-User → Kubernetes Service → App (Next.js + Node)
-     → /api/metrics → Prometheus → Grafana Dashboard
-```
-
----
-
-##  Getting Started
-
-### 🔹 Prerequisites
+### Prerequisites
 
 * Node.js 18+
 * npm
 * MongoDB Atlas cluster
 
----
-
-### 🔹 Installation
-
-1. Install dependencies:
+### Install
 
 ```bash
 npm install
 ```
 
-2. Create `.env.local`:
+### Environment
+
+Create `.env.local` with values similar to:
 
 ```env
 GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/medilearn?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<user>:<password>@<cluster-url>/medilearn?retryWrites=true&w=majority
 MONGODB_DB_NAME=medilearn
 AUTH_JWT_SECRET=YOUR_LONG_RANDOM_SECRET
 ```
 
-3. Run the app:
+### Start the app
 
 ```bash
 npm run dev
 ```
 
-Open: http://localhost:3000
+Then open:
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## 🐳 Docker Setup
+## Docker
+
+Build and run the container:
 
 ```bash
 docker build -t medilearn-ai .
@@ -120,7 +103,9 @@ docker run -p 3000:3000 medilearn-ai
 
 ---
 
-## Kubernetes Deployment (Minikube)
+## Kubernetes Deployment
+
+This repository includes Kubernetes manifests for deployment.
 
 ```bash
 minikube start
@@ -128,82 +113,71 @@ eval $(minikube docker-env)
 
 docker build -t medilearn-ai .
 
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+kubectl apply -f aws-deployment.yaml
+kubectl apply -f aws-service.yaml
+kubectl apply -f aws-servicemonitor.yaml
+```
 
+To access the service:
+
+```bash
 minikube service medilearn-service
 ```
 
 ---
 
-##  Monitoring Setup
+## Monitoring and Observability
 
 ### Prometheus
 
-* Configure scrape target:
+* Scrape the metrics endpoint at:
 
-  ```
-  medilearn-service:3000/api/metrics
-  ```
+```text
+http://<service-address>/api/metrics
+```
 
 ### Grafana
 
-* Add Prometheus as data source
-* Create dashboards using PromQL queries
+* Add Prometheus as a data source
+* Build dashboards with application metrics
+
+### Metrics exposed
+
+* `app_requests_total`
+* `app_latency_ms`
+* `app_errors_total`
+* `app_success_total`
+* `app_active_users`
+* `app_db_query_time_ms`
+* `app_uptime_seconds`
 
 ---
 
-##  Dashboard Highlights
+## Project Structure
 
-The Grafana dashboard includes:
-
-*  Requests per second
-*  Latency trends
-*  Active users
-*  Error rate
-*  Success rate
-*  Database performance
-*  Uptime
+* `src/app` — application pages and API routes
+* `src/lib` — utilities, database, and auth helpers
+* `src/components` — reusable UI components
+* `server.js` — server entry point
+* `Dockerfile` — container build definition
+* `aws-deployment.yaml`, `aws-service.yaml`, `aws-servicemonitor.yaml` — deployment manifests
 
 ---
 
-## Future Scope
+## Future Improvements
 
-*  Add latency histograms (P95 / P99 monitoring)
-*  Implement alerting (Grafana / Alertmanager)
-*  Per-API endpoint metrics
-*  Replace simulated metrics with real production tracking
-*  Deploy on AWS (EKS / ECS)
-*  Add caching layer (Redis)
-*  Improve authentication and security mechanisms
-
----
-
-## Notes
-
-* Authentication APIs: `src/app/api/auth`
-* Leaderboard API: `src/app/api/leaderboard`
-* Quiz API: `src/app/api/quiz/complete`
-* Metrics endpoint: `src/app/api/metrics`
+* Add P95/P99 latency tracking
+* Implement alerting with Grafana Alertmanager
+* Add endpoint-level metrics
+* Deploy on AWS EKS/ECS
+* Integrate Redis caching
+* Harden security and authentication
 
 ---
 
 ## Author
 
-**Mukul Deshwal**:
- GitHub: https://github.com/mukuld86
+Mukul Deshwal
 
----
+GitHub: https://github.com/mukuld86
 
-## Conclusion
-
-MediLearn AI is not just an AI-based learning platform—it is a **complete end-to-end system** that demonstrates:
-
-* Scalable deployment using Kubernetes
-* Containerization using Docker
-* Real-time monitoring with Prometheus
-* Data visualization with Grafana
-
-This project highlights how modern applications can be built, deployed, and monitored using **industry-standard DevOps practices**, making it both a functional product and a strong engineering showcase.
-
----

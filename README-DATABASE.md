@@ -1,44 +1,56 @@
-# MediLearn AI MongoDB Database Setup
+# MediLearn AI Database Overview
 
-This document describes the MongoDB Atlas configuration used by MediLearn AI.
+This document describes the MongoDB Atlas configuration and database design for MediLearn AI.
 
-## Collections
+---
 
-- users
-- quizResults
+## Database Model
 
-## users schema
+### Collections
 
-- _id: ObjectId
-- email: string (unique, lowercase)
-- passwordHash: string
-- displayName: string
-- username: string
-- photoURL: string | null
-- createdAt: Date
-- quizCount: number
-- totalScore: number
-- averageRating: number
+* `users`
+* `quizResults`
 
-## quizResults schema
+### `users` schema
 
-- _id: ObjectId
-- userId: ObjectId
-- score: number
-- category: string | null
-- difficulty: string | null
-- totalQuestions: number | null
-- metadata: object | null
-- createdAt: Date
+* `_id` — ObjectId
+* `email` — string, unique, normalized to lowercase
+* `passwordHash` — string
+* `displayName` — string
+* `username` — string
+* `photoURL` — string | null
+* `createdAt` — Date
+* `quizCount` — number
+* `totalScore` — number
+* `averageRating` — number
 
-## Required Indexes
+### `quizResults` schema
 
-- users.email unique
-- users.averageRating descending
+* `_id` — ObjectId
+* `userId` — ObjectId
+* `score` — number
+* `category` — string | null
+* `difficulty` — string | null
+* `totalQuestions` — number | null
+* `metadata` — object | null
+* `createdAt` — Date
 
-Indexes are created by server code on signup.
+---
 
-## Required Environment Variables
+## Indexes
+
+The application relies on the following indexes:
+
+* `users.email` — unique
+* `users.averageRating` — descending
+
+These indexes are provisioned by the application during user creation.
+
+---
+
+## Environment Variables
+
+The database layer requires the following variables:
 
 ```env
 MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/medilearn?retryWrites=true&w=majority
@@ -46,18 +58,30 @@ MONGODB_DB_NAME=medilearn
 AUTH_JWT_SECRET=YOUR_LONG_RANDOM_SECRET
 ```
 
-## Atlas Checklist
+---
 
-1. Create Atlas cluster.
-2. Add application IP to Network Access.
-3. Create DB user with readWrite permissions.
-4. Paste connection string into MONGODB_URI.
+## MongoDB Atlas Setup
 
-## API Surface
+1. Create a MongoDB Atlas cluster.
+2. Add your application IP address to Network Access.
+3. Create a database user with `readWrite` permissions.
+4. Store the connection string in `MONGODB_URI`.
 
-- POST /api/auth/signup
-- POST /api/auth/signin
-- POST /api/auth/signout
-- GET /api/auth/me
-- GET /api/leaderboard
-- POST /api/quiz/complete
+---
+
+## Application API Endpoints
+
+The database is used by the following API routes:
+
+* `POST /api/auth/signup`
+* `POST /api/auth/signin`
+* `POST /api/auth/signout`
+* `GET /api/auth/me`
+* `GET /api/leaderboard`
+* `POST /api/quiz/complete`
+
+---
+
+## Notes
+
+This document is intended to provide a concise reference for the MongoDB schema, environment configuration, and Atlas setup required by MediLearn AI.
