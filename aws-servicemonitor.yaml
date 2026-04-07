@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: aws-medilearn-monitor
+  namespace: aws-medilearn
+  labels:
+    release: aws-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: aws-medilearn
+  namespaceSelector:
+    matchNames:
+      - aws-medilearn
+  endpoints:
+    - port: http
+      path: /api/metrics
+      interval: 15s
