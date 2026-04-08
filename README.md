@@ -78,6 +78,14 @@ MONGODB_DB_NAME=medilearn
 AUTH_JWT_SECRET=YOUR_LONG_RANDOM_SECRET
 ```
 
+Alternatively, copy the sample environment file:
+
+```bash
+cp samples/.env.example .env.local
+```
+
+Then edit `.env.local` with your actual values.
+
 ### Start the app
 
 ```bash
@@ -103,26 +111,47 @@ docker run -p 3000:3000 medilearn-ai
 
 ---
 
-## Kubernetes Deployment
+## Deployment
 
-This repository includes Kubernetes manifests for deployment.
+This repository provides sample deployment configurations for different platforms. Copy the sample files from the `samples/` directory and customize them with your specific values.
 
-```bash
-minikube start
-eval $(minikube docker-env)
+### Kubernetes Deployment
 
-docker build -t medilearn-ai .
+Sample Kubernetes manifests are provided in the `samples/` directory.
 
-kubectl apply -f aws-deployment.yaml
-kubectl apply -f aws-service.yaml
-kubectl apply -f aws-servicemonitor.yaml
-```
+1. Copy the sample files:
+   ```bash
+   cp samples/deployment.yaml .
+   cp samples/service.yaml .
+   cp samples/servicemonitor.yaml .
+   ```
 
-To access the service:
+2. Edit the files to replace placeholders (e.g., `<YOUR_DOCKER_IMAGE>`, `<YOUR_MONGODB_URI>`) with your actual values.
 
-```bash
-minikube service medilearn-service
-```
+3. Deploy to Kubernetes:
+   ```bash
+   kubectl apply -f deployment.yaml
+   kubectl apply -f service.yaml
+   kubectl apply -f servicemonitor.yaml
+   ```
+
+4. To access the service (if using minikube):
+   ```bash
+   minikube service medilearn-service
+   ```
+
+### Render Deployment
+
+For deploying on Render, use the sample `render.yaml`:
+
+1. Copy the sample file:
+   ```bash
+   cp samples/render.yaml .
+   ```
+
+2. In your Render dashboard, create a new service and upload or reference this YAML file.
+
+3. Set the environment variables in Render's dashboard for `MONGODB_URI`, `MONGODB_DB_NAME`, `AUTH_JWT_SECRET`, and `GEMINI_API_KEY`.
 
 ---
 
@@ -160,7 +189,8 @@ http://<service-address>/api/metrics
 * `src/components` — reusable UI components
 * `server.js` — server entry point
 * `Dockerfile` — container build definition
-* `aws-deployment.yaml`, `aws-service.yaml`, `aws-servicemonitor.yaml` — deployment manifests
+* `samples/` — sample deployment configurations (deployment.yaml, service.yaml, servicemonitor.yaml, render.yaml, .env.example)
+* `aws-deployment.yaml`, `aws-service.yaml`, `aws-servicemonitor.yaml` — actual deployment manifests (not for general use)
 
 ---
 
