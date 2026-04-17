@@ -100,6 +100,47 @@ http://localhost:3000
 
 ---
 
+## Sample Files
+
+The `samples/` directory contains template configuration files for quick setup and deployment. These are starting points that you should customize for your own environment.
+
+### Available Samples
+
+| File | Purpose | Use Case |
+|------|---------|----------|
+| `.env.example` | Environment variables template | Local development setup |
+| `deployment.yaml` | Kubernetes deployment manifest | Kubernetes cluster deployment |
+| `service.yaml` | Kubernetes service definition | Expose app within/outside K8s cluster |
+| `servicemonitor.yaml` | Prometheus ServiceMonitor | Enable Prometheus metrics scraping in K8s |
+| `render.yaml` | Render platform configuration | Deploy to Render platform |
+
+### Quick Start with Samples
+
+**For Local Development:**
+```bash
+cp samples/.env.example .env.local
+# Edit .env.local with your actual credentials
+```
+
+**For Kubernetes:**
+```bash
+cp samples/deployment.yaml .
+cp samples/service.yaml .
+cp samples/servicemonitor.yaml .
+# Edit each file to replace placeholders with your values
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+kubectl apply -f servicemonitor.yaml
+```
+
+**For Render:**
+```bash
+cp samples/render.yaml .
+# Use this file in your Render dashboard
+```
+
+---
+
 ## Docker
 
 Build and run the container:
@@ -113,7 +154,7 @@ docker run -p 3000:3000 medilearn-ai
 
 ## Deployment
 
-This repository provides sample deployment configurations for different platforms. Copy the sample files from the `samples/` directory and customize them with your specific values.
+This repository provides sample deployment configurations for different platforms in the `samples/` directory. See the [Sample Files](#sample-files) section for a complete list and quick-start guide.
 
 ### Kubernetes Deployment
 
@@ -135,23 +176,35 @@ Sample Kubernetes manifests are provided in the `samples/` directory.
    kubectl apply -f servicemonitor.yaml
    ```
 
-4. To access the service (if using minikube):
+4. Verify deployment:
+   ```bash
+   kubectl get pods
+   kubectl get svc medilearn-service
+   ```
+
+5. To access the service (if using minikube):
    ```bash
    minikube service medilearn-service
    ```
 
 ### Render Deployment
 
-For deploying on Render, use the sample `render.yaml`:
+For deploying on Render, use the sample `render.yaml` from the `samples/` directory:
 
 1. Copy the sample file:
    ```bash
    cp samples/render.yaml .
    ```
 
-2. In your Render dashboard, create a new service and upload or reference this YAML file.
+2. In your Render dashboard, create a new service and upload or paste the contents of this YAML file.
 
-3. Set the environment variables in Render's dashboard for `MONGODB_URI`, `MONGODB_DB_NAME`, `AUTH_JWT_SECRET`, and `GEMINI_API_KEY`.
+3. Set the environment variables in Render's dashboard:
+   * `MONGODB_URI`
+   * `MONGODB_DB_NAME`
+   * `AUTH_JWT_SECRET`
+   * `GEMINI_API_KEY`
+
+4. Deploy and monitor the service through Render's dashboard.
 
 ---
 
@@ -187,10 +240,21 @@ http://<service-address>/api/metrics
 * `src/app` — application pages and API routes
 * `src/lib` — utilities, database, and auth helpers
 * `src/components` — reusable UI components
+* `src/ai` — AI flows and integrations with Genkit
+* `src/context` — React context for state management
+* `src/hooks` — reusable React hooks
+* `public/` — static assets
+* `functions/` — serverless functions (if using)
 * `server.js` — server entry point
 * `Dockerfile` — container build definition
-* `samples/` — sample deployment configurations (deployment.yaml, service.yaml, servicemonitor.yaml, render.yaml, .env.example)
-* `aws-deployment.yaml`, `aws-service.yaml`, `aws-servicemonitor.yaml` — actual deployment manifests (not for general use)
+* `samples/` — template configuration files for quick deployment:
+  * `.env.example` — environment variables template
+  * `deployment.yaml` — Kubernetes deployment manifest
+  * `service.yaml` — Kubernetes service configuration
+  * `servicemonitor.yaml` — Prometheus monitoring configuration
+  * `render.yaml` — Render platform deployment config
+* `aws-deployment.yaml`, `aws-service.yaml`, `aws-servicemonitor.yaml` — AWS-specific deployment manifests (internal use)
+* `docs/` — additional documentation
 
 ---
 
