@@ -1,4 +1,3 @@
-groovy id="lz6k9e"
 pipeline {
     agent any
 
@@ -52,11 +51,15 @@ pipeline {
 
     post {
         success {
-            echo 'Build Successful!'
+            echo 'Pipeline executed successfully!'
         }
 
         failure {
-            echo 'Build Failed!'
+            echo 'Pipeline execution failed!'
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
         }
     }
 }
