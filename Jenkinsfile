@@ -41,7 +41,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$TAG .'
+                withCredentials([
+                    string(credentialsId: 'mongodb_uri', variable: 'MONGODB_URI'),
+                    string(credentialsId: 'jwt_secret', variable: 'AUTH_JWT_SECRET'),
+                    string(credentialsId: 'gemini_key', variable: 'GEMINI_API_KEY')
+                ]) {
+                    sh '''
+                    docker build \
+                    --build-arg MONGODB_URI=$MONGODB_URI \
+                    --build-arg AUTH_JWT_SECRET=$AUTH_JWT_SECRET \
+                    --build-arg GEMINI_API_KEY=$GEMINI_API_KEY \
+                    -t $IMAGE_NAME:$TAG .
+                    '''
+                }
             }
         }
 
