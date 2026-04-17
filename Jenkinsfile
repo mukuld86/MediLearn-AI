@@ -1,4 +1,3 @@
-```groovy id="qwr0pj"
 pipeline {
     agent any
 
@@ -74,4 +73,3 @@ pipeline {
         }
     }
 }
-```
