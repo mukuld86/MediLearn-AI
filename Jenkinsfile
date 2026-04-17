@@ -1,3 +1,4 @@
+```groovy id="qwr0pj"
 pipeline {
     agent any
 
@@ -8,7 +9,7 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/mukuld86/MediLearn-AI.git'
@@ -23,7 +24,19 @@ pipeline {
 
         stage('Build Next.js App') {
             steps {
-                sh 'npm run build'
+                withCredentials([
+                    string(credentialsId: 'mongodb_uri', variable: 'MONGODB_URI'),
+                    string(credentialsId: 'jwt_secret', variable: 'AUTH_JWT_SECRET'),
+                    string(credentialsId: 'gemini_key', variable: 'GEMINI_API_KEY')
+                ]) {
+                    sh '''
+                    export MONGODB_URI=$MONGODB_URI
+                    export AUTH_JWT_SECRET=$AUTH_JWT_SECRET
+                    export GEMINI_API_KEY=$GEMINI_API_KEY
+
+                    npm run build
+                    '''
+                }
             }
         }
 
@@ -35,13 +48,15 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS'
-                )]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
                     sh '''
-                    echo $PASS | docker login -u $USER --password-stdin
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                     docker push $IMAGE_NAME:$TAG
                     '''
                 }
@@ -51,15 +66,12 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'CI Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Pipeline execution failed!'
-        }
-
-        always {
-            echo 'Pipeline execution completed.'
+            echo 'CI Pipeline failed!'
         }
     }
 }
+```
