@@ -223,15 +223,16 @@ http://<service-address>/api/metrics
 * Add Prometheus as a data source
 * Build dashboards with application metrics
 
-### Metrics exposed
+![Grafana Dashboard](./Dashboard.png)
 
+### Metrics exposed
+* `app_health`
 * `app_requests_total`
 * `app_latency_ms`
-* `app_errors_total`
-* `app_success_total`
-* `app_active_users`
 * `app_db_query_time_ms`
 * `app_uptime_seconds`
+* `traffic_received`
+* `traffic_sent`
 
 ---
 
